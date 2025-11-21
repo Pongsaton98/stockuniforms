@@ -164,22 +164,33 @@
     <section class="rounded-3xl bg-white p-6 shadow-xl">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 class="text-lg font-semibold">ออร์เดอร์ล่าสุด</h2>
-          <p class="text-sm text-slate-500">บันทึกทุกคำสั่งซื้อที่เพิ่มผ่านฟอร์ม</p>
+          <h2 class="text-lg font-semibold">คำสั่งซื้อ (Google Sheets)</h2>
+          <p class="text-sm text-slate-500">ข้อมูลตรงกับคอลัมน์ id, name, type-shirt, category, date, payment, status, quantity, total</p>
         </div>
         <button id="open-order-modal-secondary" class="inline-flex items-center rounded-2xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60">+ เพิ่มคำสั่งซื้อ</button>
       </div>
-      <table class="mt-6 w-full border-collapse text-sm">
-        <thead>
-          <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-            <th class="py-3">ลูกค้า</th>
-            <th class="py-3">ประเภทสินค้า</th>
-            <th class="py-3">จำนวน</th>
-            <th class="py-3">สถานะ</th>
-          </tr>
-        </thead>
-        <tbody id="order-table-body" class="divide-y divide-slate-100"></tbody>
-      </table>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full min-w-[720px] border-collapse text-sm">
+          <thead>
+            <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <th class="py-3">รหัส</th>
+              <th class="py-3">ชื่อลูกค้า</th>
+              <th class="py-3">ประเภทเสื้อ</th>
+              <th class="py-3">หมวดหมู่</th>
+              <th class="py-3">วันที่</th>
+              <th class="py-3">การชำระเงิน</th>
+              <th class="py-3">สถานะ</th>
+              <th class="py-3">จำนวน</th>
+              <th class="py-3">ยอดรวม</th>
+            </tr>
+          </thead>
+          <tbody id="order-table-body" class="divide-y divide-slate-100">
+            <tr>
+              <td colspan="9" class="py-6 text-center text-slate-500">กำลังโหลดข้อมูลคำสั่งซื้อ...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
   <div id="order-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 p-6">
@@ -194,15 +205,25 @@
         </button>
       </div>
       <form id="order-form" class="mt-6 space-y-4">
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <label class="text-sm font-medium text-slate-600" for="order-id">รหัสคำสั่งซื้อ</label>
+            <input id="order-id" name="id" type="text" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น ORD-1001" />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-slate-600" for="order-date">วันที่สั่งซื้อ</label>
+            <input id="order-date" name="date" type="date" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          </div>
+        </div>
         <div>
           <label class="text-sm font-medium text-slate-600" for="customer-name">ชื่อลูกค้า</label>
-          <input id="customer-name" name="customer" type="text" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น โรงเรียนสวนกุหลาบ" />
+          <input id="customer-name" name="name" type="text" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น โรงเรียนสวนกุหลาบ" />
         </div>
         <div class="grid gap-4 md:grid-cols-2">
           <div>
-            <label class="text-sm font-medium text-slate-600" for="product-type">ประเภทสินค้า</label>
-            <select id="product-type" name="product" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-              <option value="">-- เลือกประเภทสินค้า --</option>
+            <label class="text-sm font-medium text-slate-600" for="shirt-type">ประเภทเสื้อ (type-shirt)</label>
+            <select id="shirt-type" name="type-shirt" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+              <option value="">-- เลือกประเภทเสื้อ --</option>
               <option value="เสื้อพนักงาน">เสื้อพนักงาน</option>
               <option value="เสื้อกีฬา">เสื้อกีฬา</option>
               <option value="เสื้อโรงเรียน">เสื้อโรงเรียน</option>
@@ -210,23 +231,46 @@
             </select>
           </div>
           <div>
-            <label class="text-sm font-medium text-slate-600" for="order-qty">จำนวน (ชิ้น)</label>
-            <input id="order-qty" name="quantity" type="number" min="1" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น 120" />
+            <label class="text-sm font-medium text-slate-600" for="order-category">หมวดหมู่ (category)</label>
+            <select id="order-category" name="category" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+              <option value="">-- เลือกหมวดหมู่ --</option>
+              <option value="องค์กร">องค์กร</option>
+              <option value="สถานศึกษา">สถานศึกษา</option>
+              <option value="ร้านค้า">ร้านค้า</option>
+              <option value="ทั่วไป">ทั่วไป</option>
+            </select>
           </div>
         </div>
-        <div>
-          <label class="text-sm font-medium text-slate-600" for="order-status">สถานะ</label>
-          <select id="order-status" name="status" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-            <option value="">-- เลือกสถานะ --</option>
-            <option value="รอชำระเงิน">รอชำระเงิน</option>
-            <option value="กำลังผลิต">กำลังผลิต</option>
-            <option value="รอจัดส่ง">รอจัดส่ง</option>
-            <option value="จัดส่งแล้ว">จัดส่งแล้ว</option>
-          </select>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <label class="text-sm font-medium text-slate-600" for="payment-status">การชำระเงิน (payment)</label>
+            <select id="payment-status" name="payment" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+              <option value="">-- สถานะการชำระเงิน --</option>
+              <option value="ยังไม่ชำระ">ยังไม่ชำระ</option>
+              <option value="มัดจำแล้ว">มัดจำแล้ว</option>
+              <option value="ชำระเต็มจำนวน">ชำระเต็มจำนวน</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-slate-600" for="order-status">สถานะคำสั่งซื้อ (status)</label>
+            <select id="order-status" name="status" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+              <option value="">-- เลือกสถานะ --</option>
+              <option value="รอชำระเงิน">รอชำระเงิน</option>
+              <option value="กำลังผลิต">กำลังผลิต</option>
+              <option value="รอจัดส่ง">รอจัดส่ง</option>
+              <option value="จัดส่งแล้ว">จัดส่งแล้ว</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label class="text-sm font-medium text-slate-600" for="order-note">หมายเหตุเพิ่มเติม</label>
-          <textarea id="order-note" name="note" rows="3" class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="ข้อมูลเพิ่มเติม (ไม่บังคับ)"></textarea>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <label class="text-sm font-medium text-slate-600" for="order-qty">จำนวน (quantity)</label>
+            <input id="order-qty" name="quantity" type="number" min="1" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น 120" />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-slate-600" for="order-total">ยอดรวม (total)</label>
+            <input id="order-total" name="total" type="number" min="0" step="0.01" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น 55000" />
+          </div>
         </div>
         <div class="flex flex-wrap justify-end gap-3 pt-2">
           <button type="button" id="cancel-order" class="rounded-2xl border border-slate-200 px-5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">ยกเลิก</button>

@@ -1,5 +1,6 @@
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1i3XMdNVGD9-MSCi9UKHcDuUXC7oGmLXNI5bvEhsoCaU/gviz/tq?tqx=out:json&gid=0';
-const LOCAL_STORAGE_KEY = 'uniform-orders';
+const SHEET_EMPLOYEE_URL = 'https://docs.google.com/spreadsheets/d/1i3XMdNVGD9-MSCi9UKHcDuUXC7oGmLXNI5bvEhsoCaU/gviz/tq?tqx=out:json&gid=0';
+const SHEET_ORDER_URL = 'https://docs.google.com/spreadsheets/d/1i3XMdNVGD9-MSCi9UKHcDuUXC7oGmLXNI5bvEhsoCaU/gviz/tq?tqx=out:json&gid=1366868069';
+const ORDER_WEBHOOK_URL = 'YOUR_APPS_SCRIPT_WEBHOOK_URL';
 
 const statusStyles = {
   'ลาออก': 'bg-rose-50 text-rose-600',
@@ -25,14 +26,14 @@ const closeOrderButton = document.getElementById('close-order-modal');
 const cancelOrderButton = document.getElementById('cancel-order');
 const orderForm = document.getElementById('order-form');
 
-const orders = loadOrders();
-renderOrders();
+fetchEmployeeSheet();
+fetchOrderSheet();
 
-async function fetchSheetData() {
+async function fetchEmployeeSheet() {
   if (!tbody) return;
   setLoadingState('กำลังโหลดข้อมูลจาก Google Sheets...');
   try {
-    const response = await fetch(SHEET_URL);
+    const response = await fetch(SHEET_EMPLOYEE_URL);
     if (!response.ok) throw new Error('ไม่สามารถเชื่อมต่อ Google Sheets ได้');
 
     const text = await response.text();
@@ -95,10 +96,11 @@ function formatCell(cell) {
 }
 
 if (refreshBtn) {
-  refreshBtn.addEventListener('click', fetchSheetData);
+  refreshBtn.addEventListener('click', () => {
+    fetchEmployeeSheet();
+    fetchOrderSheet();
+  });
 }
-
-fetchSheetData();
 
 openOrderButtons.forEach((btn) => btn.addEventListener('click', () => toggleOrderModal(true)));
 
@@ -129,24 +131,29 @@ document.addEventListener('keydown', (event) => {
 });
 
 if (orderForm) {
-  orderForm.addEventListener('submit', (event) => {
+  orderForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const formData = new FormData(orderForm);
-    const newOrder = {
-      id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
-      customer: formData.get('customer')?.toString().trim() || '-',
-      product: formData.get('product')?.toString() || '-',
-      quantity: Number(formData.get('quantity')) || 0,
-      status: formData.get('status')?.toString() || '-',
-      note: formData.get('note')?.toString().trim() || '',
-      createdAt: new Date().toISOString(),
-    };
+    const payload = Object.fromEntries(formData.entries());
+    setOrderTableLoading('กำลังบันทึกข้อมูลคำสั่งซื้อ...');
 
-    orders.unshift(newOrder);
-    saveOrders();
-    renderOrders();
-    orderForm.reset();
-    toggleOrderModal(false);
+    try {
+      const response = await fetch(ORDER_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error('ส่งข้อมูลไป Google Sheets ไม่สำเร็จ');
+
+      orderForm.reset();
+      toggleOrderModal(false);
+      await fetchOrderSheet();
+    } catch (error) {
+      console.error(error);
+      alert('ไม่สามารถบันทึกคำสั่งซื้อได้ กรุณาลองใหม่ หรือเช็ก ORDER_WEBHOOK_URL');
+      fetchOrderSheet();
+    }
   });
 }
 
@@ -161,87 +168,68 @@ function toggleOrderModal(show) {
   }
 }
 
-function renderOrders() {
+async function fetchOrderSheet() {
   if (!orderTableBody) return;
-  if (!orders.length) {
-    orderTableBody.innerHTML = `
-      <tr>
-        <td colspan="4" class="py-6 text-center text-slate-500">ยังไม่มีคำสั่งซื้อ กดปุ่ม "เพิ่มคำสั่งซื้อ" เพื่อเริ่มบันทึก</td>
-      </tr>
-    `;
-    return;
-  }
+  setOrderTableLoading('กำลังโหลดข้อมูลคำสั่งซื้อ...');
 
-  const fragment = document.createDocumentFragment();
-  orders.forEach((order) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="py-3">
-        <div class="font-medium text-slate-800">${order.customer}</div>
-        <div class="text-xs text-slate-500">${formatDate(order.createdAt)}</div>
-        ${order.note ? `<p class="mt-1 text-xs text-slate-500">${order.note}</p>` : ''}
-      </td>
-      <td class="py-3 text-slate-500">${order.product}</td>
-      <td class="py-3 font-semibold">${order.quantity}</td>
-      <td class="py-3">
-        <span class="rounded-full px-3 py-1 text-xs font-semibold ${orderStatusStyles[order.status] || 'bg-slate-100 text-slate-600'}">${order.status}</span>
-      </td>
-    `;
-    fragment.appendChild(tr);
-  });
-
-  orderTableBody.innerHTML = '';
-  orderTableBody.appendChild(fragment);
-}
-
-function formatDate(isoString) {
-  if (!isoString) return '-';
-  const date = new Date(isoString);
-  return date.toLocaleString('th-TH', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
-}
-
-function loadOrders() {
   try {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (saved) {
-      return JSON.parse(saved);
+    const response = await fetch(SHEET_ORDER_URL);
+    if (!response.ok) throw new Error('โหลดคำสั่งซื้อไม่ได้');
+
+    const text = await response.text();
+    const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+    const rows = json.table?.rows || [];
+
+    if (!rows.length) {
+      setOrderTableLoading('ยังไม่มีคำสั่งซื้อ');
+      return;
     }
+
+    const fragment = document.createDocumentFragment();
+    rows.forEach((row) => {
+      const cells = row.c || [];
+      const order = {
+        id: formatCell(cells[0]),
+        name: formatCell(cells[1]),
+        type: formatCell(cells[2]),
+        category: formatCell(cells[3]),
+        date: formatCell(cells[4]),
+        payment: formatCell(cells[5]),
+        status: formatCell(cells[6]),
+        quantity: formatCell(cells[7]),
+        total: formatCell(cells[8]),
+      };
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="py-3 font-semibold text-slate-800">${order.id || '-'}</td>
+        <td class="py-3 text-slate-600">${order.name || '-'}</td>
+        <td class="py-3 text-slate-500">${order.type || '-'}</td>
+        <td class="py-3 text-slate-500">${order.category || '-'}</td>
+        <td class="py-3 text-slate-500">${order.date || '-'}</td>
+        <td class="py-3 font-medium">${order.payment || '-'}</td>
+        <td class="py-3">
+          <span class="rounded-full px-3 py-1 text-xs font-semibold ${orderStatusStyles[order.status] || 'bg-slate-100 text-slate-600'}">${order.status || '-'}</span>
+        </td>
+        <td class="py-3 font-semibold">${order.quantity || '-'}</td>
+        <td class="py-3 font-semibold">${order.total || '-'}</td>
+      `;
+      fragment.appendChild(tr);
+    });
+
+    orderTableBody.innerHTML = '';
+    orderTableBody.appendChild(fragment);
   } catch (error) {
-    console.warn('ไม่สามารถอ่านข้อมูลคำสั่งซื้อที่บันทึกไว้ได้', error);
+    console.error(error);
+    setOrderTableLoading('โหลดคำสั่งซื้อไม่สำเร็จ');
   }
-  return getDefaultOrders();
 }
 
-function saveOrders() {
-  try {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(orders));
-  } catch (error) {
-    console.warn('ไม่สามารถบันทึกคำสั่งซื้อได้', error);
-  }
-}
-
-function getDefaultOrders() {
-  return [
-    {
-      id: 'default-1',
-      customer: 'โรงเรียนสวนกุหลาบ',
-      product: 'เสื้อพละ',
-      quantity: 120,
-      status: 'กำลังผลิต',
-      note: 'ล็อตส่งเสาร์หน้า',
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 'default-2',
-      customer: 'บริษัท ABC Group',
-      product: 'เสื้อพนักงาน',
-      quantity: 80,
-      status: 'จัดส่งแล้ว',
-      note: '',
-      createdAt: new Date(Date.now() - 86400000).toISOString(),
-    },
-  ];
+function setOrderTableLoading(message) {
+  if (!orderTableBody) return;
+  orderTableBody.innerHTML = `
+    <tr>
+      <td colspan="9" class="py-6 text-center text-slate-500">${message}</td>
+    </tr>
+  `;
 }
