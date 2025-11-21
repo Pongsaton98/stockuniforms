@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Management | Uniforms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="./assets/app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 font-prompt text-slate-900">
+  <div class="min-h-screen bg-slate-100 lg:flex">
+    <aside class="w-full border-b border-slate-200 bg-white px-6 py-6 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-wide text-slate-500">Sales Manager</p>
+        <p class="text-lg font-semibold text-slate-900">Admin</p>
+      </div>
+      <nav class="mt-8 space-y-1 text-sm font-medium text-slate-600">
+        <a href="./index.html" class="flex items-center gap-3 rounded-2xl px-4 py-3 hover:bg-slate-50">
+          <span class="text-lg">🏠</span>
+          ภาพรวม
+        </a>
+        <a href="./order.html" class="flex items-center gap-3 rounded-2xl bg-slate-900/5 px-4 py-3 text-slate-900">
+          <span class="text-lg">🧾</span>
+          คำสั่งซื้อ
+        </a>
+        <div class="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400">
+          <span class="text-lg">📦</span>
+          สินค้า
+          <span class="ml-auto text-xs">เร็วๆ นี้</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400">
+          <span class="text-lg">👥</span>
+          ลูกค้า
+          <span class="ml-auto text-xs">เร็วๆ นี้</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400">
+          <span class="text-lg">⚙️</span>
+          ตั้งค่า
+          <span class="ml-auto text-xs">เร็วๆ นี้</span>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="flex-1 bg-gradient-to-br from-surface via-white to-surface-strong px-6 py-8 lg:px-12">
+      <header class="rounded-3xl bg-gradient-to-br from-white via-accent/20 to-primary/80 p-8 text-info shadow-card">
+        <div class="flex flex-wrap items-center justify-between gap-6">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-wide text-primary-dark/80">การจัดการคำสั่งซื้อ</p>
+            <h1 class="text-3xl font-semibold text-info">คำสั่งซื้อทั้งหมด</h1>
+            <p class="text-sm text-info/80">ซิงก์ข้อมูลกับ Google Sheets โดยอัตโนมัติ</p>
+          </div>
+          <div class="flex gap-3">
+            <button id="refresh-orders" class="rounded-2xl border border-primary-dark/30 bg-white/70 px-5 py-2 text-sm font-semibold text-primary-dark hover:bg-white">รีเฟรชข้อมูล</button>
+            <button id="scroll-to-form" class="rounded-2xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow-soft hover:bg-primary-dark">+ เพิ่มคำสั่งซื้อ</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <p class="text-sm text-slate-500">คำสั่งซื้อทั้งหมด</p>
+          <p id="metric-total-orders" class="mt-2 text-3xl font-semibold text-slate-900">0</p>
+        </article>
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <p class="text-sm text-slate-500">ยอดขายรวม</p>
+          <p id="metric-total-sales" class="mt-2 text-3xl font-semibold text-slate-900">฿0</p>
+        </article>
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <p class="text-sm text-slate-500">จำนวนชิ้นรวม</p>
+          <p id="metric-total-qty" class="mt-2 text-3xl font-semibold text-slate-900">0</p>
+        </article>
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <p class="text-sm text-slate-500">ค้างชำระ</p>
+          <p id="metric-pending" class="mt-2 text-3xl font-semibold text-slate-900">0</p>
+        </article>
+      </section>
+
+      <section class="mt-10 rounded-3xl bg-white p-6 shadow-card">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-semibold">รายการคำสั่งซื้อ</h2>
+            <p class="text-sm text-slate-500">ข้อมูลตรงกับคอลัมน์ใน Google Sheets (id, name, type-shirt, category, date, payment, status, quantity, total)</p>
+          </div>
+          <a href="https://docs.google.com/spreadsheets/d/1i3XMdNVGD9-MSCi9UKHcDuUXC7oGmLXNI5bvEhsoCaU/edit?gid=1366868069#gid=1366868069" target="_blank" class="text-sm font-semibold text-primary hover:text-primary-dark">เปิด Google Sheets</a>
+        </div>
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full min-w-[900px] border-collapse text-sm">
+            <thead>
+              <tr class="text-left text-[12px] font-semibold uppercase tracking-wide text-slate-500">
+                <th class="py-3">รหัส</th>
+                <th class="py-3">ลูกค้า</th>
+                <th class="py-3">ประเภทเสื้อ</th>
+                <th class="py-3">หมวดหมู่</th>
+                <th class="py-3">วันที่</th>
+                <th class="py-3">การชำระเงิน</th>
+                <th class="py-3">สถานะ</th>
+                <th class="py-3">จำนวน</th>
+                <th class="py-3">ยอดรวม</th>
+                <th class="py-3">ดำเนินการ</th>
+              </tr>
+            </thead>
+            <tbody id="order-table-body" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="10" class="py-6 text-center text-slate-500">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="order-form-section" class="mt-10 rounded-3xl bg-white p-6 shadow-card">
+        <h2 class="text-xl font-semibold">เพิ่มคำสั่งซื้อใหม่</h2>
+        <p class="text-sm text-slate-500">บันทึกข้อมูลแล้วส่งขึ้น Google Sheets ทันที</p>
+        <form id="order-form" class="mt-6 space-y-5">
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="order-id">รหัสคำสั่งซื้อ (id)</label>
+              <input id="order-id" name="id" type="text" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น ORD-1001" />
+            </div>
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="order-date">วันที่ (date)</label>
+              <input id="order-date" name="date" type="date" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-slate-600" for="customer-name">ชื่อลูกค้า (name)</label>
+            <input id="customer-name" name="name" type="text" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น บริษัท ABC" />
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="shirt-type">ประเภทเสื้อ (type-shirt)</label>
+              <select id="shirt-type" name="type-shirt" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <option value="">-- เลือกประเภทเสื้อ --</option>
+                <option value="เสื้อพนักงาน">เสื้อพนักงาน</option>
+                <option value="เสื้อกีฬา">เสื้อกีฬา</option>
+                <option value="เสื้อโรงเรียน">เสื้อโรงเรียน</option>
+                <option value="เสื้อแม่บ้าน">เสื้อแม่บ้าน</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="order-category">หมวดหมู่ (category)</label>
+              <select id="order-category" name="category" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <option value="">-- เลือกหมวดหมู่ --</option>
+                <option value="องค์กร">องค์กร</option>
+                <option value="สถานศึกษา">สถานศึกษา</option>
+                <option value="ร้านค้า">ร้านค้า</option>
+                <option value="ทั่วไป">ทั่วไป</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="payment-status">การชำระเงิน (payment)</label>
+              <select id="payment-status" name="payment" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <option value="">-- เลือกสถานะการชำระเงิน --</option>
+                <option value="ยังไม่ชำระ">ยังไม่ชำระ</option>
+                <option value="มัดจำแล้ว">มัดจำแล้ว</option>
+                <option value="ชำระเต็มจำนวน">ชำระเต็มจำนวน</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="order-status">สถานะคำสั่งซื้อ (status)</label>
+              <select id="order-status" name="status" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <option value="">-- เลือกสถานะ --</option>
+                <option value="รอชำระเงิน">รอชำระเงิน</option>
+                <option value="กำลังผลิต">กำลังผลิต</option>
+                <option value="รอจัดส่ง">รอจัดส่ง</option>
+                <option value="จัดส่งแล้ว">จัดส่งแล้ว</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="order-qty">จำนวน (quantity)</label>
+              <input id="order-qty" name="quantity" type="number" min="1" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น 120" />
+            </div>
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="order-total">ยอดรวม (total)</label>
+              <input id="order-total" name="total" type="number" min="0" step="0.01" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น 55000" />
+            </div>
+          </div>
+          <div class="grid gap-4">
+            <div>
+              <label class="text-sm font-medium text-slate-600" for="order-note">หมายเหตุเพิ่มเติม (ไม่บังคับ)</label>
+              <textarea id="order-note" name="note" rows="3" class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="รายละเอียดอื่นๆ"></textarea>
+            </div>
+          </div>
+          <div class="flex flex-wrap justify-end gap-3">
+            <button type="reset" class="rounded-2xl border border-slate-200 px-5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">ล้างฟอร์ม</button>
+            <button type="submit" class="rounded-2xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-dark">บันทึกคำสั่งซื้อ</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="./assets/order.js"></script>
+</body>
+</html>

@@ -10,274 +10,237 @@
   <script src="./assets/app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 text-slate-900 font-prompt">
-  <header class="bg-gradient-to-br from-primary to-primary-dark px-6 py-12 text-white">
-    <div class="mx-auto max-w-6xl">
-      <h1 class="text-3xl font-semibold">Uniforms Sales Dashboard</h1>
-      <p class="mt-1 text-white/80">แดชบอร์ดสำหรับวิเคราะห์ยอดขายและบริหารสต็อกเสื้อผ้า</p>
-    </div>
-  </header>
-
-  <main class="mx-auto -mt-16 max-w-6xl space-y-8 px-6 pb-12">
-    <section class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-      <article class="rounded-2xl bg-white p-6 shadow-xl">
-        <p class="text-sm font-medium text-slate-500">ยอดขายรวม (เดือนนี้)</p>
-        <p class="mt-2 text-3xl font-semibold">฿ 245,000</p>
-        <p class="mt-2 text-sm font-semibold text-amber-500">+12% เทียบเดือนก่อน</p>
-      </article>
-      <article class="rounded-2xl bg-white p-6 shadow-xl">
-        <p class="text-sm font-medium text-slate-500">ออร์เดอร์ทั้งหมด</p>
-        <p class="mt-2 text-3xl font-semibold">438</p>
-        <p class="mt-2 text-sm font-semibold text-amber-500">+6% เทียบเดือนก่อน</p>
-      </article>
-      <article class="rounded-2xl bg-white p-6 shadow-xl">
-        <p class="text-sm font-medium text-slate-500">มูลค่าเฉลี่ยต่อออร์เดอร์</p>
-        <p class="mt-2 text-3xl font-semibold">฿ 560</p>
-        <p class="mt-2 text-sm font-semibold text-amber-500">+4% เทียบเดือนก่อน</p>
-      </article>
-      <article class="rounded-2xl bg-white p-6 shadow-xl">
-        <p class="text-sm font-medium text-slate-500">จำนวนสินค้าในสต็อก</p>
-        <p class="mt-2 text-3xl font-semibold">1,280 ชิ้น</p>
-        <p class="mt-2 text-sm font-semibold text-emerald-500">ปรับปรุงล่าสุด 10:20 น.</p>
-      </article>
-    </section>
-
-    <section class="rounded-3xl bg-white p-6 shadow-xl">
-      <div class="flex flex-wrap gap-4">
-        <select class="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-          <option>ช่วงเวลา: 30 วันล่าสุด</option>
-          <option>7 วันล่าสุด</option>
-          <option>ไตรมาสนี้</option>
-        </select>
-        <select class="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-          <option>ประเภทสินค้า: ทั้งหมด</option>
-          <option>เสื้อพนักงาน</option>
-          <option>เสื้อกีฬา</option>
-          <option>เสื้อโรงเรียน</option>
-        </select>
-        <input type="search" placeholder="ค้นหาลูกค้าหรือคำสั่งซื้อ" class="flex-1 min-w-[200px] rounded-2xl border border-slate-200 px-4 py-2 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
-        <button id="refresh-data" class="inline-flex items-center rounded-2xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60">อัปเดตข้อมูล</button>
-        <button id="open-order-modal" class="inline-flex items-center rounded-2xl border border-primary px-5 py-2 text-sm font-semibold text-primary shadow hover:bg-primary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60">เพิ่มคำสั่งซื้อ</button>
+<body class="bg-slate-100 font-prompt text-slate-900">
+  <div class="min-h-screen bg-slate-100 lg:flex">
+    <aside class="w-full border-b border-slate-200 bg-white px-6 py-6 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-wide text-slate-500">Sales Manager</p>
+        <p class="text-lg font-semibold text-slate-900">Admin</p>
       </div>
-    </section>
+      <nav class="mt-8 space-y-1 text-sm font-medium text-slate-600">
+        <a href="./index.html" class="flex items-center gap-3 rounded-2xl bg-slate-900/5 px-4 py-3 text-slate-900">
+          <span class="text-lg">🏠</span>
+          ภาพรวม
+        </a>
+        <a href="./order.html" class="flex items-center gap-3 rounded-2xl px-4 py-3 hover:bg-slate-50">
+          <span class="text-lg">🧾</span>
+          คำสั่งซื้อ
+        </a>
+        <div class="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400">
+          <span class="text-lg">📦</span>
+          สินค้า
+          <span class="ml-auto text-xs">เร็วๆ นี้</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400">
+          <span class="text-lg">👥</span>
+          ลูกค้า
+          <span class="ml-auto text-xs">เร็วๆ นี้</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400">
+          <span class="text-lg">⚙️</span>
+          ตั้งค่า
+          <span class="ml-auto text-xs">เร็วๆ นี้</span>
+        </div>
+      </nav>
+    </aside>
 
-    <section class="grid gap-6 lg:grid-cols-[2fr_1fr]">
-      <article class="rounded-3xl bg-white p-6 shadow-xl">
-        <div class="flex items-start justify-between">
+    <main class="flex-1 bg-gradient-to-br from-surface via-white to-surface-strong px-6 py-10 lg:px-12">
+      <header class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-accent/20 to-primary/80 p-8 text-info shadow-card">
+        <div class="relative z-10 flex flex-wrap items-center justify-between gap-6">
           <div>
-            <h2 class="text-lg font-semibold">แนวโน้มยอดขาย</h2>
-            <p class="text-sm text-slate-500">แสดงภาพรวมของยอดขายต่อวันย้อนหลัง 30 วัน</p>
+            <p class="text-sm font-semibold uppercase tracking-wide text-primary-dark/80">ภาพรวมยอดขาย</p>
+            <h1 class="text-3xl font-semibold text-info">Uniforms Sales Dashboard</h1>
+            <p class="mt-1 text-sm text-info/80">แดชบอร์ดสำหรับติดตามยอดขาย คำสั่งซื้อ และทีมงานจาก Google Sheets</p>
           </div>
-          <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">+18% MoM</span>
+          <div class="flex flex-wrap gap-3">
+            <button id="refresh-data" class="rounded-2xl border border-primary-dark/30 bg-white/70 px-5 py-2 text-sm font-semibold text-primary-dark transition hover:bg-white">รีเฟรชข้อมูลพนักงาน</button>
+            <a href="./order.html" class="rounded-2xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-primary-dark">ไปที่หน้าคำสั่งซื้อ</a>
+          </div>
         </div>
-        <div class="mt-6 flex min-h-[220px] items-end gap-2 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-4">
-          <div class="flex-1 rounded-t-2xl bg-gradient-to-b from-indigo-200 to-indigo-500" style="height: 35%"></div>
-          <div class="flex-1 rounded-t-2xl bg-gradient-to-b from-amber-200 to-amber-500" style="height: 50%"></div>
-          <div class="flex-1 rounded-t-2xl bg-gradient-to-b from-indigo-200 to-indigo-500" style="height: 65%"></div>
-          <div class="flex-1 rounded-t-2xl bg-gradient-to-b from-amber-200 to-amber-500" style="height: 20%"></div>
-          <div class="flex-1 rounded-t-2xl bg-gradient-to-b from-indigo-200 to-indigo-500" style="height: 80%"></div>
-          <div class="flex-1 rounded-t-2xl bg-gradient-to-b from-amber-200 to-amber-500" style="height: 50%"></div>
-          <div class="flex-1 rounded-t-2xl bg-gradient-to-b from-indigo-200 to-indigo-500" style="height: 65%"></div>
-        </div>
-      </article>
+        <div class="absolute inset-0 bg-hero-glow opacity-80"></div>
+      </header>
 
-      <article class="rounded-3xl bg-white p-6 shadow-xl">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">งานที่ต้องทำ</h2>
-          <span class="text-sm font-medium text-slate-500">3 งาน</span>
-        </div>
-        <ul class="mt-4 space-y-4">
-          <li class="flex items-start gap-3 rounded-2xl bg-slate-50 p-4">
-            <input type="checkbox" class="mt-1 h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary" />
-            <span class="text-sm">ติดต่อซัพพลายเออร์เพื่อสั่งผลิตยูนิฟอร์มล็อตใหม่</span>
-          </li>
-          <li class="flex items-start gap-3 rounded-2xl bg-emerald-50/90 p-4">
-            <input type="checkbox" checked class="mt-1 h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary" />
-            <span class="text-sm">ตรวจสอบยอดชำระเงินที่ค้างจากร้านลูกค้า</span>
-          </li>
-          <li class="flex items-start gap-3 rounded-2xl bg-slate-50 p-4">
-            <input type="checkbox" class="mt-1 h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary" />
-            <span class="text-sm">อัปเดตรูปสินค้าลงแคตตาล็อกออนไลน์</span>
-          </li>
-        </ul>
-      </article>
-    </section>
+      <section class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-slate-500">ยอดขายทั้งหมด</p>
+              <p class="mt-2 text-3xl font-semibold text-slate-900">฿245,000</p>
+              <p class="text-sm font-semibold text-success">+12% MoM</p>
+            </div>
+            <span class="rounded-2xl bg-primary/10 p-3 text-2xl text-primary">💰</span>
+          </div>
+        </article>
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-slate-500">คำสั่งซื้อทั้งหมด</p>
+              <p class="mt-2 text-3xl font-semibold text-slate-900">438</p>
+              <p class="text-sm font-semibold text-amber-500">+6% MoM</p>
+            </div>
+            <span class="rounded-2xl bg-accent/10 p-3 text-2xl text-accent">📦</span>
+          </div>
+        </article>
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-slate-500">ลูกค้าทั้งหมด</p>
+              <p class="mt-2 text-3xl font-semibold text-slate-900">150</p>
+              <p class="text-sm font-semibold text-primary">คงที่</p>
+            </div>
+            <span class="rounded-2xl bg-primary/10 p-3 text-2xl text-primary">👥</span>
+          </div>
+        </article>
+        <article class="rounded-3xl border border-surface-strong bg-white p-6 shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-slate-500">ค้างชำระ</p>
+              <p class="mt-2 text-3คร font-semibold text-slate-900">฿35,000</p>
+              <p class="text-sm font-semibold text-rose-500">-2 ออเดอร์</p>
+            </div>
+            <span class="rounded-2xl bg-rose-100 p-3 text-2xl text-rose-500">⚠️</span>
+          </div>
+        </article>
+      </section>
 
-    <section class="grid gap-6 lg:grid-cols-2">
-      <article class="rounded-3xl bg-white p-6 shadow-xl">
-        <h2 class="text-lg font-semibold">ข้อมูลจาก Google Sheets</h2>
-        <p class="text-sm text-slate-500">ดึงข้อมูลแบบเรียลไทม์จากสเปรดชีตที่แชร์ไว้</p>
-        <table class="mt-4 w-full border-collapse text-sm">
-          <thead>
-            <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-              <th class="py-3">รหัส</th>
-              <th class="py-3">ชื่อ / อีเมล</th>
-              <th class="py-3">แผนก</th>
-              <th class="py-3">สถานะ</th>
-              <th class="py-3">ติดต่อ</th>
-            </tr>
-          </thead>
-          <tbody id="sheet-data-body" class="divide-y divide-slate-100">
-            <tr>
-              <td colspan="5" class="py-6 text-center text-slate-500">กำลังโหลดข้อมูลจาก Google Sheets...</td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
+      <section class="mt-12 rounded-3xl bg-white p-6 shadow-card">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-semibold">คำสั่งซื้อล่าสุด</h2>
+            <p class="text-sm text-slate-500">ข้อมูลสรุปสำหรับผู้จัดการฝ่ายขาย</p>
+          </div>
+          <a href="./order.html" class="text-sm font-semibold text-primary hover:text-primary-dark">ดูทั้งหมด</a>
+        </div>
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full min-w-[700px] border-collapse text-sm">
+            <thead>
+              <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <th class="py-3">คำสั่งซื้อ</th>
+                <th class="py-3">ลูกค้า</th>
+                <th class="py-3">วันที่</th>
+                <th class="py-3">สถานะ</th>
+                <th class="py-3">ยอดรวม</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="py-3 font-semibold text-slate-900">#1005</td>
+                <td class="py-3 text-slate-600">บริษัท พรหมโลกา</td>
+                <td class="py-3 text-slate-500">11 ส.ค. 2568</td>
+                <td class="py-3">
+                  <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">จัดส่งแล้ว</span>
+                </td>
+                <td class="py-3 font-semibold text-slate-900">฿6,000</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-semibold text-slate-900">#1004</td>
+                <td class="py-3 text-slate-600">บริษัท กาการตลาด</td>
+                <td class="py-3 text-slate-500">12 ส.ค. 2568</td>
+                <td class="py-3">
+                  <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-600">กำลังดำเนินการ</span>
+                </td>
+                <td class="py-3 font-semibold text-slate-900">฿2,500</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-semibold text-slate-900">#1003</td>
+                <td class="py-3 text-slate-600">บริษัท ก่อสร้าง</td>
+                <td class="py-3 text-slate-500">13 ส.ค. 2568</td>
+                <td class="py-3">
+                  <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">จัดส่งแล้ว</span>
+                </td>
+                <td class="py-3 font-semibold text-slate-900">฿4,500</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-semibold text-slate-900">#1002</td>
+                <td class="py-3 text-slate-600">บริษัท การเงิน</td>
+                <td class="py-3 text-slate-500">14 ส.ค. 2568</td>
+                <td class="py-3">
+                  <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-600">กำลังดำเนินการ</span>
+                </td>
+                <td class="py-3 font-semibold text-slate-900">฿3,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <article class="rounded-3xl bg-white p-6 shadow-xl">
-        <h2 class="text-lg font-semibold">สินค้าขายดี</h2>
-        <table class="mt-4 w-full border-collapse text-sm">
-          <thead>
-            <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-              <th class="py-3">สินค้า</th>
-              <th class="py-3">ยอดขาย / เดือน</th>
-              <th class="py-3">สต็อก</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            <tr>
-              <td class="py-3 font-medium text-slate-800">เสื้อยูนิฟอร์มออฟฟิศ Classic</td>
-              <td class="py-3 text-slate-500">980 ชิ้น</td>
-              <td class="py-3 font-semibold">320</td>
-            </tr>
-            <tr>
-              <td class="py-3 font-medium text-slate-800">เสื้อกีฬา Active Pro</td>
-              <td class="py-3 text-slate-500">760 ชิ้น</td>
-              <td class="py-3 font-semibold">210</td>
-            </tr>
-            <tr>
-              <td class="py-3 font-medium text-slate-800">เสื้อแม่บ้าน Essential</td>
-              <td class="py-3 text-slate-500">540 ชิ้น</td>
-              <td class="py-3 font-semibold">150</td>
-            </tr>
-            <tr>
-              <td class="py-3 font-medium text-slate-800">เสื้อโรงเรียน SmartFit</td>
-              <td class="py-3 text-slate-500">430 ชิ้น</td>
-              <td class="py-3 font-semibold">95</td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
-    </section>
+      <section class="mt-12 grid gap-6 lg:grid-cols-2">
+        <article class="rounded-3xl bg-white p-6 shadow-card">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-semibold">ข้อมูลพนักงาน (Google Sheets)</h2>
+              <p class="text-sm text-slate-500">ดึงข้อมูลแบบเรียลไทม์จากสเปรดชีต</p>
+            </div>
+            <button id="refresh-data-secondary" class="rounded-2xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">รีเฟรช</button>
+          </div>
+          <div class="mt-4 overflow-x-auto">
+            <table class="w-full min-w-[520px] border-collapse text-sm">
+              <thead>
+                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <th class="py-3">รหัส</th>
+                  <th class="py-3">ชื่อ / อีเมล</th>
+                  <th class="py-3">แผนก</th>
+                  <th class="py-3">สถานะ</th>
+                  <th class="py-3">ติดต่อ</th>
+                </tr>
+              </thead>
+              <tbody id="sheet-data-body" class="divide-y divide-slate-100">
+                <tr>
+                  <td colspan="5" class="py-6 text-center text-slate-500">กำลังโหลดข้อมูลจาก Google Sheets...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
 
-    <section class="rounded-3xl bg-white p-6 shadow-xl">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 class="text-lg font-semibold">คำสั่งซื้อ (Google Sheets)</h2>
-          <p class="text-sm text-slate-500">ข้อมูลตรงกับคอลัมน์ id, name, type-shirt, category, date, payment, status, quantity, total</p>
-        </div>
-        <button id="open-order-modal-secondary" class="inline-flex items-center rounded-2xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60">+ เพิ่มคำสั่งซื้อ</button>
-      </div>
-      <div class="mt-6 overflow-x-auto">
-        <table class="w-full min-w-[720px] border-collapse text-sm">
-          <thead>
-            <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-              <th class="py-3">รหัส</th>
-              <th class="py-3">ชื่อลูกค้า</th>
-              <th class="py-3">ประเภทเสื้อ</th>
-              <th class="py-3">หมวดหมู่</th>
-              <th class="py-3">วันที่</th>
-              <th class="py-3">การชำระเงิน</th>
-              <th class="py-3">สถานะ</th>
-              <th class="py-3">จำนวน</th>
-              <th class="py-3">ยอดรวม</th>
-            </tr>
-          </thead>
-          <tbody id="order-table-body" class="divide-y divide-slate-100">
-            <tr>
-              <td colspan="9" class="py-6 text-center text-slate-500">กำลังโหลดข้อมูลคำสั่งซื้อ...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-  <div id="order-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 p-6">
-    <div class="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="text-xl font-semibold text-slate-900">เพิ่มคำสั่งซื้อใหม่</h3>
-          <p class="text-sm text-slate-500">กรอกข้อมูลให้ครบแล้วกดบันทึก</p>
-        </div>
-        <button id="close-order-modal" class="rounded-full p-2 text-slate-500 transition hover:bg-slate-100" aria-label="ปิดหน้าต่าง">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form id="order-form" class="mt-6 space-y-4">
-        <div class="grid gap-4 md:grid-cols-2">
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="order-id">รหัสคำสั่งซื้อ</label>
-            <input id="order-id" name="id" type="text" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น ORD-1001" />
+        <article class="rounded-3xl bg-white p-6 shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-semibold">สินค้าขายดี</h2>
+              <p class="text-sm text-slate-500">แสดง 4 รายการยอดนิยม</p>
+            </div>
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">อัปเดตทุกสัปดาห์</span>
           </div>
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="order-date">วันที่สั่งซื้อ</label>
-            <input id="order-date" name="date" type="date" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
-          </div>
-        </div>
-        <div>
-          <label class="text-sm font-medium text-slate-600" for="customer-name">ชื่อลูกค้า</label>
-          <input id="customer-name" name="name" type="text" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น โรงเรียนสวนกุหลาบ" />
-        </div>
-        <div class="grid gap-4 md:grid-cols-2">
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="shirt-type">ประเภทเสื้อ (type-shirt)</label>
-            <select id="shirt-type" name="type-shirt" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-              <option value="">-- เลือกประเภทเสื้อ --</option>
-              <option value="เสื้อพนักงาน">เสื้อพนักงาน</option>
-              <option value="เสื้อกีฬา">เสื้อกีฬา</option>
-              <option value="เสื้อโรงเรียน">เสื้อโรงเรียน</option>
-              <option value="เสื้อแม่บ้าน">เสื้อแม่บ้าน</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="order-category">หมวดหมู่ (category)</label>
-            <select id="order-category" name="category" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-              <option value="">-- เลือกหมวดหมู่ --</option>
-              <option value="องค์กร">องค์กร</option>
-              <option value="สถานศึกษา">สถานศึกษา</option>
-              <option value="ร้านค้า">ร้านค้า</option>
-              <option value="ทั่วไป">ทั่วไป</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid gap-4 md:grid-cols-2">
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="payment-status">การชำระเงิน (payment)</label>
-            <select id="payment-status" name="payment" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-              <option value="">-- สถานะการชำระเงิน --</option>
-              <option value="ยังไม่ชำระ">ยังไม่ชำระ</option>
-              <option value="มัดจำแล้ว">มัดจำแล้ว</option>
-              <option value="ชำระเต็มจำนวน">ชำระเต็มจำนวน</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="order-status">สถานะคำสั่งซื้อ (status)</label>
-            <select id="order-status" name="status" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
-              <option value="">-- เลือกสถานะ --</option>
-              <option value="รอชำระเงิน">รอชำระเงิน</option>
-              <option value="กำลังผลิต">กำลังผลิต</option>
-              <option value="รอจัดส่ง">รอจัดส่ง</option>
-              <option value="จัดส่งแล้ว">จัดส่งแล้ว</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid gap-4 md:grid-cols-2">
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="order-qty">จำนวน (quantity)</label>
-            <input id="order-qty" name="quantity" type="number" min="1" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น 120" />
-          </div>
-          <div>
-            <label class="text-sm font-medium text-slate-600" for="order-total">ยอดรวม (total)</label>
-            <input id="order-total" name="total" type="number" min="0" step="0.01" required class="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="เช่น 55000" />
-          </div>
-        </div>
-        <div class="flex flex-wrap justify-end gap-3 pt-2">
-          <button type="button" id="cancel-order" class="rounded-2xl border border-slate-200 px-5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">ยกเลิก</button>
-          <button type="submit" class="inline-flex items-center rounded-2xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60">บันทึกคำสั่งซื้อ</button>
-        </div>
-      </form>
-    </div>
+          <table class="mt-4 w-full border-collapse text-sm">
+            <thead>
+              <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <th class="py-3">สินค้า</th>
+                <th class="py-3">ยอดขาย / เดือน</th>
+                <th class="py-3">สต็อก</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="py-3 font-medium text-slate-800">เสื้อยูนิฟอร์มออฟฟิศ Classic</td>
+                <td class="py-3 text-slate-500">980 ชิ้น</td>
+                <td class="py-3 font-semibold">320</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium text-slate-800">เสื้อกีฬา Active Pro</td>
+                <td class="py-3 text-slate-500">760 ชิ้น</td>
+                <td class="py-3 font-semibold">210</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium text-slate-800">เสื้อแม่บ้าน Essential</td>
+                <td class="py-3 text-slate-500">540 ชิ้น</td>
+                <td class="py-3 font-semibold">150</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium text-slate-800">เสื้อโรงเรียน SmartFit</td>
+                <td class="py-3 text-slate-500">430 ชิ้น</td>
+                <td class="py-3 font-semibold">95</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+
+      <section class="mt-12 rounded-3xl bg-white p-6 text-center shadow-card">
+        <h2 class="text-xl font-semibold text-slate-900">ต้องการติดตามคำสั่งซื้อเชิงลึก?</h2>
+        <p class="mt-2 text-sm text-slate-500">ไปที่ Order Management เพื่อเพิ่มคำสั่งซื้อใหม่และเชื่อมต่อ Google Sheets</p>
+        <a href="./order.html" class="mt-4 inline-flex items-center rounded-2xl bg-primary px-6 py-2 text-sm font-semibold text-white shadow hover:bg-primary-dark">เปิดหน้าคำสั่งซื้อ</a>
+      </section>
+    </main>
   </div>
   <script type="module" src="./assets/data.js"></script>
 </body>
